@@ -1,4 +1,5 @@
 <h2>Product Catalog</h2>
+<p>Current user:<span data-bind="text: username"></span></p>
 (from the Oracle JET Application 2018-products-portal-soaring-clouds-sequel, view catalog.html)
 <oj-list-view id="listview" aria-label="list using array" data="[[dataProvider]]" selection-mode="single" on-selection-changed="[[handleSelectionChanged]]" item.renderer="[[oj.KnockoutTemplateUtils.getRenderer('product_template', true)]]">
 </oj-list-view>
