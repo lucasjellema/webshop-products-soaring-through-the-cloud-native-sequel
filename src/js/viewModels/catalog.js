@@ -37,6 +37,7 @@ define(
                 
                 var productSelectionEvent = {
                     "eventType": "productSelectionEvent"
+                    ,"source":"Products Portlet"
                     , "payload": {
                         "nameSelectedProduct": selectedProduct
                     }
