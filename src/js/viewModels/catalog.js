@@ -19,49 +19,32 @@ define(
                     })
                 });
 
-            // this function will communicate an event with the parent window
-            // typically used for applications that run inside an IFRAME to inform the
-            // embedding application about what is going on.      
-            self.callParent = function (message) {
-                console.log('send message from Catalog to parent window');
-                // here we can restrict which parent page can receive our message
-                // by specifying the origin that this page should have
-                var targetOrigin = '*';
-                parent.postMessage(message, targetOrigin);
-
-            }
             self.handleSelectionChanged = function (event) {
                 // Access selected elements via ui.items
                 var selectedProduct = event.detail.value;
                 console.log("selected product " + selectedProduct);
-                
+
                 var productSelectionEvent = {
                     "eventType": "productSelectionEvent"
-                    ,"source":"Products Portlet"
+                    , "source": "Products Portlet"
                     , "payload": {
                         "nameSelectedProduct": selectedProduct
                     }
                 }
-                self.callParent(productSelectionEvent)
+                var rootViewModel = ko.dataFor(document.getElementById('globalBody'));
+                rootViewModel.callParent(productSelectionEvent)
             }
 
             self.username = ko.observable("");
-            self.init = function () {
-                // listener for events posted on the window;
-                // used for applications running insidean IFRAME to receive events from the
-                // embedding application
-                window.addEventListener("message", function (event) {
-                  console.log("Received message from embedding application " + event);
-                  console.log("Payload =  " + JSON.stringify(event.data));
-                  if (event.data.eventType =="globalContext") {
-                      var un = event.data.payload.globalContext.userName;
-                      self.username(un)
-                  }
-                },
-                  false);
-                  self.callParent({"childHasLoaded":true})
-              }
-              $(document).ready(function () { self.init(); })
+            var rootViewModel = ko.dataFor(document.getElementById('globalBody'));
+               
+            rootViewModel.registerGlobalContextListener(
+                function (globalContext) {
+                    console.log("catalog - global context listener - receiving global context " + JSON.stringify(globalContext))
+                    var customer = globalContext.customer
+                    self.username(customer.title + " " + customer.firstName + " " + customer.lastName)
+                }
+            )
 
         }
 
