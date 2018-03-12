@@ -38,13 +38,21 @@ define(
             self.username = ko.observable("");
             self.customerIdentifier = ko.observable("");
             var rootViewModel = ko.dataFor(document.getElementById('globalBody'));
-               
+
+            updateModelFromGlobalContext(rootViewModel.globalContext)
+            function updateModelFromGlobalContext(globalContext) {
+
+                var customer = globalContext.customer
+                if (customer) {
+                    self.username(customer.title + " " + customer.firstName + " " + customer.lastName)
+                    self.customerIdentifier(customer.customerIdentifier)
+                }
+            }
+
             rootViewModel.registerGlobalContextListener(
                 function (globalContext) {
                     console.log("catalog - global context listener - receiving global context " + JSON.stringify(globalContext))
-                    var customer = globalContext.customer
-                    self.username(customer.title + " " + customer.firstName + " " + customer.lastName)
-                    self.customerIdentifier(customer.customerIdentifier)
+                    updateModelFromGlobalContext(globalContext)
                 }
             )
 
