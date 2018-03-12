@@ -13,6 +13,7 @@ define(['ojs/ojcore', 'knockout', 'ojs/ojknockout'],
 
       self.globalContextListeners = [];
       self.registerGlobalContextListener = function (listener) {
+        console.log("New global context listener is registered")
         self.globalContextListeners.push(listener)
       }
 
@@ -47,7 +48,8 @@ define(['ojs/ojcore', 'knockout', 'ojs/ojknockout'],
           if (event.data.eventType == "globalContext") {
             self.globalContext = event.data.payload.globalContext
             //inform listeners of new global context
-            self.globalContextListeners.forEach(function (listene) { listener(self.globalContext) })
+            console.log("Inform all listeners about the globalContext")
+            self.globalContextListeners.forEach(function (listener) { listener(self.globalContext) })
           }
         },
           false);
